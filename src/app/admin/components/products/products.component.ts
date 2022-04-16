@@ -24,6 +24,7 @@ export class ProductsComponent extends BaseComponent implements OnInit {
     }).subscribe(data => console.log(data));
   
     /*
+    
     this.httpClient.post({
       controller: "Product"
     },{
