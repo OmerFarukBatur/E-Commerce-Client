@@ -5,6 +5,7 @@ import { FileSystemFileEntry, NgxFileDropEntry } from 'ngx-file-drop';
 import { FileUploadDialogComponent, FileUploadDialogState } from 'src/app/dialogs/file-upload-dialog/file-upload-dialog.component';
 import { AlertifyService, MessageType, Position } from '../../admin/alertify.service';
 import { CustomToastrService, ToastrMessageType, ToastrPosition } from '../../ui/custom-toastr.service';
+import { DialogService } from '../dialog.service';
 import { HttpClientService } from '../http-client.service';
 
 @Component({
@@ -17,7 +18,8 @@ export class FileUploadComponent {
     private httpClientServices: HttpClientService,
     private alertifyServices: AlertifyService,
     private customToastrServices: CustomToastrService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private dialogService: DialogService
     ){}
 
   @Input() options: Partial<FileUploadOptions>;
@@ -34,7 +36,10 @@ export class FileUploadComponent {
       });      
     }
 
-      this.openDialog(() =>{
+    this.dialogService.openDialog({
+      componentType: FileUploadDialogComponent,
+      data: FileUploadDialogState.Yes,
+      afterClosed: () =>{
 
         this.httpClientServices.post({
           controller: this.options.controller,
@@ -56,8 +61,7 @@ export class FileUploadComponent {
               messageType: ToastrMessageType.Success,
               position: ToastrPosition.BottomRight
             })
-          }
-    
+          }    
     
          },(errorResponse: HttpErrorResponse) =>{
     
@@ -78,24 +82,25 @@ export class FileUploadComponent {
     
          });
 
-      });
-
-     
-
-  }
-
-  openDialog(afterClosed: any): void {
-    const dialogRef = this.dialog.open(FileUploadDialogComponent, {
-      width: '250px',
-      data: FileUploadDialogState.Yes,
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result == FileUploadDialogState.Yes) {
-        afterClosed();
       }
     });
+
   }
+
+  
+
+  // openDialog(afterClosed: any): void {
+  //   const dialogRef = this.dialog.open(FileUploadDialogComponent, {
+  //     width: '250px',
+  //     data: FileUploadDialogState.Yes,
+  //   });
+
+  //   dialogRef.afterClosed().subscribe(result => {
+  //     if (result == FileUploadDialogState.Yes) {
+  //       afterClosed();
+  //     }
+  //   });
+  // }
 }
 
 export class FileUploadOptions{

@@ -11,11 +11,11 @@ export class DialogService {
     private dialog: MatDialog
   ) { }
 
-  openDialog(dialogType: DialogParameters): void {
+  openDialog(dialogType: Partial<DialogParameters>): void {
     const dialogRef = this.dialog.open(dialogType.componentType, {
-      width: dialogType.options.width,
-      height: dialogType.options.height,
-      position
+      width: dialogType.options?.width,
+      height: dialogType.options?.height,
+      position: dialogType.options?.position,
       data: dialogType.data,
     });
 
@@ -32,11 +32,11 @@ export class DialogParameters{
   componentType: ComponentType<any>;
   data: any;
   afterClosed: () => void;
-  options: DialogOptions;
+  options?: Partial<DialogOptions> = new DialogOptions();
 }
 
 export class DialogOptions{
-  width: number;
-  height: number;
-  position: DialogPosition;
+  width?: string = "250px";
+  height?: string;
+  position?: DialogPosition;
 }
