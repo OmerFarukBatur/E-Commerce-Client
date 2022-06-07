@@ -1,0 +1,35 @@
+<div class="row">
+    <div class="col-md-3"></div>    
+    <div class="col-md-6">
+    <form [formGroup]="frm" (ngSubmit)="onSubmit(frm.value)">
+        <div class="mb-3">
+            <label for="adSoyad" class="form-label">Ad SoyAd</label>
+            <input formControlName="adSoyad" type="text" class="form-control" id="adSoyad" placeholder="Ad Soyad" [ngClass]="{'is-invalid': component.adSoyad.errors}">
+            <div id="emailHelp" class="form-text" style="display: none;">We'll never share your email with anyone else.</div>
+          </div>
+        <div class="mb-3">
+            <label for="kullaniciAdi" class="form-label">Kullanıcı Adı</label>
+            <input formControlName="kullaniciAdi" type="text" class="form-control" id="kullaniciAdi" placeholder="Kullanıcı Adı">
+            <div id="emailHelp" class="form-text" style="display: none;">We'll never share your email with anyone else.</div>
+          </div>
+    <div class="mb-3">
+      <label class="form-label">Email</label>
+      <input formControlName="email" type="email" class="form-control" placeholder="Email">
+      <div id="emailHelp" class="form-text" style="display: none;">We'll never share your email with anyone else.</div>
+    </div>
+    <div class="mb-3">
+      <label for="password" class="form-label">Şifre</label>
+      <input formControlName="sifre" type="password" class="form-control" id="password" placeholder="Şifre">
+    </div>
+    <div class="mb-3">
+        <label for="password2" class="form-label">Şifre Tekrar</label>
+        <input formControlName="sifreTekrar" type="password" class="form-control" id="password2" placeholder="Şifre Tekrar">
+      </div>
+    <div class="mb-3 form-check">
+      
+    </div>
+    <button type="submit" class="btn btn-primary">Kayıt Ol</button>
+  </form>
+</div>
+<div class="col-md-3"></div>
+</div>
