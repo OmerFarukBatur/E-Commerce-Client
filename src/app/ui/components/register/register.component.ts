@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ValidationErrors, AbstractControl } from '@angular/forms';
+import { Create_User } from 'src/app/contracts/users/create_user';
 import { User } from 'src/app/entities/user';
+import { UserService } from 'src/app/services/common/models/user.service';
+import { CustomToastrService, ToastrMessageType, ToastrPosition } from 'src/app/services/ui/custom-toastr.service';
 
 @Component({
   selector: 'app-register',
@@ -9,19 +12,23 @@ import { User } from 'src/app/entities/user';
 })
 export class RegisterComponent implements OnInit {
 
-  constructor(private formBuilder: FormBuilder) { }
+  constructor(
+    private formBuilder: FormBuilder,
+    private userService: UserService,
+    private toastrService: CustomToastrService
+    ) { }
 
 frm: FormGroup;
 
   ngOnInit(): void {
 
     this.frm = this.formBuilder.group({
-      adSoyad: ['',      
+      nameSurname: ['',      
        ([Validators.required,
         Validators.maxLength(25),
         Validators.minLength(2),])
        ],
-      kullaniciAdi: ['',        
+      userName: ['',        
         ([Validators.required,
         Validators.maxLength(25),
         Validators.minLength(2)])
@@ -32,16 +39,16 @@ frm: FormGroup;
       Validators.minLength(10),
       Validators.email])
     ],
-    sifre: ['',
+    password: ['',
     ([Validators.required])
     ],
-    sifreTekrar: ['',
+    passwordConfirm: ['',
       ([Validators.required])
     ]
     },{
       validators: (group: AbstractControl): ValidationErrors | null => {
-        let sifre = group.get("sifre").value;
-        let sifreTekrar = group.get("sifreTekrar").value;
+        let sifre = group.get("password").value;
+        let sifreTekrar = group.get("passwordConfirm").value;
         return sifre === sifreTekrar ? null : { notSame: true };
       }
     });
@@ -53,10 +60,25 @@ frm: FormGroup;
 
 submitted: boolean = false;
 
-  onSubmit(data: User){
+  async onSubmit(user: User){
     this.submitted = true;
     if (this.frm.invalid) {
       return;
     }
+    
+   const result: Create_User =  await this.userService.create(user);
+
+   if (result.succeeded) {
+     this.toastrService.message(result.message,"Kullanıcı Kaydı Başarılı",{
+       messageType: ToastrMessageType.Success,
+       position: ToastrPosition.BottomRight
+     });
+   }
+   else{
+     this.toastrService.message(result.message,"Kullanıcı Kaydı Hata",{
+      messageType: ToastrMessageType.Error,
+      position: ToastrPosition.BottomRight
+    });
+   }
   }
 }
