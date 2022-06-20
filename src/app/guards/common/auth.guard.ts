@@ -5,6 +5,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { Observable } from 'rxjs';
 import { SpinnerType } from 'src/app/base/base.component';
 import { Position } from 'src/app/services/admin/alertify.service';
+import { _isAuthenticated } from 'src/app/services/common/auth.service';
 import { CustomToastrService, ToastrMessageType, ToastrPosition } from 'src/app/services/ui/custom-toastr.service';
 
 @Injectable({
@@ -26,19 +27,19 @@ export class AuthGuard implements CanActivate {
     state: RouterStateSnapshot
     ){
       this.spinner.show(SpinnerType.BallScaleMultiple);
-      const token : string = localStorage.getItem("accessToken");
+      // const token : string = localStorage.getItem("accessToken");
 
       //const decodeToken = this.jwtHelper.decodeToken(token);
       //const exprirationDate : Date = this.jwtHelper.getTokenExpirationDate(token);
-      let expired : boolean;
+      // let expired : boolean;
 
-      try {
-        expired = this.jwtHelper.isTokenExpired(token);
-      } catch (error) {
-        expired = true;
-      }
+      // try {
+      //   expired = this.jwtHelper.isTokenExpired(token);
+      // } catch (error) {
+      //   expired = true;
+      // }
 
-      if (!token || expired) {
+      if (!_isAuthenticated) {
         this.router.navigate(["login"],{ queryParams: {returnUrl: state.url}});
         this.toastrService.message("Oturum açmanız gerekiyor!","Yetkisiz Erişim",{
           messageType : ToastrMessageType.Warning,
