@@ -13,6 +13,9 @@
       <input #txtPassword type="password" class="form-control" id="password" placeholder="Şifre" >
       <div  class="form-text text-muted invalid-feedback" >Lütfen şifreyi boş geçmeyiniz..</div>
     </div>
+
+    	
+    <asl-google-signin-button></asl-google-signin-button>
  
     <button (click)="Login(txtUserNameOrEmail.value,txtPassword.value)" type="submit" class="btn btn-primary" style="margin-top:3px;">Giriş Yap</button>
 </div>
