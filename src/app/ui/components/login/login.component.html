@@ -14,8 +14,13 @@
       <div  class="form-text text-muted invalid-feedback" >Lütfen şifreyi boş geçmeyiniz..</div>
     </div>
 
-    	
-    <asl-google-signin-button></asl-google-signin-button>
+    	<div style="float: left;padding: 0 5px 0 0; cursor: pointer;">
+        <asl-google-signin-button></asl-google-signin-button>
+      </div>
+    
+    <div style="cursor: pointer;">
+      <img src="../../../../assets/facebook.png" width="32px" height="32px" (click)="facebookLogin()" />
+    </div>
  
     <button (click)="Login(txtUserNameOrEmail.value,txtPassword.value)" type="submit" class="btn btn-primary" style="margin-top:3px;">Giriş Yap</button>
 </div>

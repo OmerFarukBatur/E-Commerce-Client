@@ -1,4 +1,4 @@
-import { SocialAuthService, SocialUser } from '@abacritt/angularx-social-login';
+import { FacebookLoginProvider, SocialAuthService, SocialUser } from '@abacritt/angularx-social-login';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -26,11 +26,24 @@ export class LoginComponent extends BaseComponent implements OnInit {
       super(spinner);
        socialAuthService.authState.subscribe(async(user: SocialUser) => {
         this.showSpinner(SpinnerType.BallAtom);
-       await userService.gooleLogin(user,()=>{
-        this.authService.identityCheck();
-        this.hideSpinner(SpinnerType.BallAtom);
-       });
+       
+        switch (user.provider) {
+          case "GOOGLE":
+            await userService.gooleLogin(user,()=>{
+              this.authService.identityCheck();
+              this.hideSpinner(SpinnerType.BallAtom);
+             });
+            break;
+        
+          case "FACEBOOK":
+            await userService.facebookLogin(user,() =>{
+              this.authService.identityCheck();
+              this.hideSpinner(SpinnerType.BallAtom);
+            });
+            break;
+        }
       });
+      
      }
 
   ngOnInit(): void {
@@ -40,7 +53,6 @@ export class LoginComponent extends BaseComponent implements OnInit {
     this.showSpinner(SpinnerType.BallAtom);
     await this.userService.login(userNameOrEmail,password, ()=> {
       this.authService.identityCheck();
-
       this.activatedRoute.queryParamMap.subscribe(params => {
         const returnUrl: string = params["returnUrl"];
         if (returnUrl) {
@@ -49,6 +61,11 @@ export class LoginComponent extends BaseComponent implements OnInit {
       });
       this.hideSpinner(SpinnerType.BallAtom);
     });
+  }
+
+
+  facebookLogin(){
+    this.socialAuthService.signIn(FacebookLoginProvider.PROVIDER_ID);
   }
 
 }
