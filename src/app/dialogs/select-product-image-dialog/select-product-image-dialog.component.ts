@@ -59,10 +59,15 @@ export class SelectProductImageDialogComponent extends BaseDialog<SelectProductI
           card.fadeOut(500);
         });
       }
-    })
+    })  
     
-    
-    
+  }
+
+  showCase(imageId : string){
+    this.spinner.show(SpinnerType.BallAtom);
+    this.productService.changeShowCaseImage(imageId,this.data as string,()=>{
+      this.spinner.hide(SpinnerType.BallAtom);
+    });
   }
 
 }
