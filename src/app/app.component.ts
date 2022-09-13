@@ -1,8 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { DynamicLoadComponentDirective } from './directives/common/dynamic-load-component.directive';
 import { AuthService } from './services/common/auth.service';
+import { DynamicLoadComponentService } from './services/common/dynamic-load-component.service';
 import { CustomToastrService, ToastrMessageType, ToastrPosition } from './services/ui/custom-toastr.service';
+import { ComponentType } from "../app/services/common/dynamic-load-component.service";
 declare var $: any;
 
 @Component({
@@ -11,11 +14,15 @@ declare var $: any;
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
+  @ViewChild(DynamicLoadComponentDirective, {static: true})
+  dynamicLoadComponentDirective : DynamicLoadComponentDirective;
+
   title = 'ETicaretClient';
   constructor( 
     public authService: AuthService,
     private toastrService: CustomToastrService,
-    private router: Router
+    private router: Router,
+    private dynamicLoadComponentService: DynamicLoadComponentService
   ){
     authService.identityCheck();
   }
@@ -28,5 +35,11 @@ export class AppComponent {
       messageType: ToastrMessageType.Warning,
       position: ToastrPosition.BottomRight
     })
+  }
+
+  
+
+  loadComponent(){
+    this.dynamicLoadComponentService.loadComponent(ComponentType.BasketsComponent, this.dynamicLoadComponentDirective.viewContainerRef);
   }
 }
