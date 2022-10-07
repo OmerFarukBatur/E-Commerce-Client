@@ -92,4 +92,14 @@ export class UserAuthService {
 
     callBackFunction();
   }
+
+  async passwordReset(email: string, callBackFunction? : () => void){
+    const observable : Observable<any> = this.httpClientServices.post({
+      controller: "auth",
+      action: "password-reset"
+    },{"Email":email});
+
+    await firstValueFrom(observable);
+    callBackFunction();
+  }
 }
