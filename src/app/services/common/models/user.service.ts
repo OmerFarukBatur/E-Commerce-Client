@@ -10,7 +10,7 @@ import { HttpClientService } from '../http-client.service';
 export class UserService { 
   constructor(
     private httpClientServices: HttpClientService
-    ) { }
+  ) { }
 
   async create(user: User): Promise<Create_User>{
     const observable: Observable<Create_User | User> = this.httpClientServices.post<Create_User | User>({
@@ -20,5 +20,20 @@ export class UserService {
     return await firstValueFrom(observable) as Create_User;
   }
 
+  async updatePassword(userId: string, resetToken: string, password: string, passwordConfirm: string, successCallBack?: ()=> void, errorCallBack?: (error)=> void){
+    const observable: Observable<any> = this.httpClientServices.post({
+      controller:"users",
+      action: "update-password"
+    },{
+      userId: userId,
+      resetToken: resetToken,
+      password: password,
+      passwordConfirm: passwordConfirm
+    });
+
+    const promiseData : Promise<any> = firstValueFrom(observable);
+    promiseData.then(value => successCallBack()).catch(error => errorCallBack(error));
+    await promiseData;
+  }
 
 }
