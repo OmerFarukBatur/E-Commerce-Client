@@ -9,8 +9,18 @@ export class RoleService {
 
   constructor(private httpClientServices: HttpClientService) { }
 
-  async getRoles(){
+  async getRoles(page: number, size: number,succesCallBack?: () => void, errorCallBack?: (errorMessage: string) => void){
+    const observable: Observable<any> = this.httpClientServices.get({
+      controller : "roles",
+      action: "get-all-roles",
+      queryString: `page:${ page}&size:${size}`
+    });
 
+    const promiseData = firstValueFrom(observable);
+    promiseData.then(succesCallBack)
+    .catch(errorCallBack);
+
+    return await promiseData;
   }
 
   async create(name: string, succesCallBack?: () => void, errorCallBack?: (errorMessage: string) => void){
@@ -19,7 +29,10 @@ export class RoleService {
       action: "create-role"
     },{name: name});
 
-    return await firstValueFrom(observable) as {succeeded: boolean};
+    const promiseData = firstValueFrom(observable);
+    promiseData.then(succesCallBack)
+    .catch(errorCallBack);
 
+    return await promiseData as {succeeded: boolean};
   }
 }

@@ -11,6 +11,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatDialogModule } from '@angular/material/dialog';
 import { CreateComponent } from './create/create.component';
 import { ListComponent } from './list/list.component';
+import { DeleteDirectiveModule } from 'src/app/directives/admin/delete.directive.module';
 
 
 
@@ -32,6 +33,7 @@ import { ListComponent } from './list/list.component';
     MatTableModule,
     MatPaginatorModule,
     MatDialogModule,
+    DeleteDirectiveModule
   ]
 })
 export class RoleModule { }

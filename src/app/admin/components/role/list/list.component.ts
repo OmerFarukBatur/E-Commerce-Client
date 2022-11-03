@@ -1,6 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { BaseComponent, SpinnerType } from 'src/app/base/base.component';
+import { List_Role } from 'src/app/contracts/role/list_role';
 import { AlertifyService, MessageType, Position } from 'src/app/services/admin/alertify.service';
 import { RoleService } from 'src/app/services/common/models/role.service';
 
@@ -14,44 +17,35 @@ export class ListComponent extends BaseComponent implements OnInit{
   constructor(
     private roleService: RoleService, 
     spinner: NgxSpinnerService, 
-    private alertifyService: AlertifyService,
-    private dialogServices: DialogService
+    private alertifyService: AlertifyService
     ) {
     super(spinner);
    }
   
 
   displayedColumns: string[] = ['name','edit','delete'];
-  dataSource : MatTableDataSource<List_Product> = null;
+  dataSource : MatTableDataSource<List_Role> = null;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-   async getProducts(){
+   async getRoles(){
     this.showSpinner(SpinnerType.BallScaleMultiple);
-    const allProducts : {totalCount: number; products: List_Product[]} = await  this.productService.read(this.paginator ? this.paginator.pageIndex : 0, this.paginator ? this.paginator.pageSize : 5,() => this.hideSpinner(SpinnerType.BallAtom), errorMessage => this.alertifyService.message(errorMessage,{
+    const allRoles : {datas: List_Role[], totalCount: number} = 
+      await  this.roleService.getRoles(this.paginator ? this.paginator.pageIndex : 0, this.paginator ? this.paginator.pageSize : 5,() => this.hideSpinner(SpinnerType.BallAtom), errorMessage => this.alertifyService.message(errorMessage,{
       dismissOthers: true,
       messageType: MessageType.Error,
       position: Position.BottomRight
     }));
 
-    this.dataSource = new MatTableDataSource<List_Product>(allProducts.products);
-    this.paginator.length = allProducts.totalCount;
+    this.dataSource = new MatTableDataSource<List_Role>(allRoles.datas);
+    this.paginator.length = allRoles.totalCount;
    }
 
-  addProductImages(id: string){
-    this.dialogServices.openDialog({
-      componentType: SelectProductImageDialogComponent,
-      data: id,
-      options: {
-        width: "600px"
-      }
-    });
-  }
    async pageChange(){
-     await this.getProducts();
+     await this.getRoles();
    }
 
   async ngOnInit() {
-   await this.getProducts();
+   await this.getRoles();
   }
 
 }
