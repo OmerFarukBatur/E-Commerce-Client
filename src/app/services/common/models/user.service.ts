@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { firstValueFrom, Observable } from 'rxjs';
 import { Create_User } from 'src/app/contracts/users/create_user';
+import { List_User } from 'src/app/contracts/users/list_user';
 import { User } from 'src/app/entities/user';
 import { HttpClientService } from '../http-client.service';
 
@@ -36,4 +37,16 @@ export class UserService {
     await promiseData;
   }
 
+  async getAllUsers(page: number = 0,size: number = 5,successCallBack?: ()=> void,errorCallBack?: (errorMessage: string) => void): Promise<{totalUsersCount: number; users: List_User[]}>{
+    const observable : Observable<{totalUsersCount: number; users: List_User[]}> = this.httpClientServices.get({
+        controller: "users",
+        queryString : `page=${page}&size=${size}`
+    });
+
+    const promiseData = firstValueFrom(observable);
+    promiseData.then(value => successCallBack())
+    .catch(error => errorCallBack(error))
+
+    return await promiseData ;
+  }
 }
